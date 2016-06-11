@@ -68,7 +68,20 @@ typedef unsigned short		uint16;
 typedef unsigned long		uint32;
 typedef unsigned long long	uint64;
 
+/* OSX using Clang C/C++ */
+#elif defined( __APPLE__ ) && defined( __clang__ )
+#include <stdint.h>
+typedef int8_t			int8;
+typedef int16_t			int16;
+typedef int32_t			int32;
+typedef int64_t			int64;
+
+typedef uint8_t			uint8;
+typedef uint16_t		uint16;
+typedef uint32_t		uint32;
+typedef uint64_t		uint64;
 /* Haven't a clue; define your specific platform here. */
+
 
 #else
 #error Define a set of datatypes for your particular platform here.

@@ -77,6 +77,9 @@ freely, subject to the following restrictions:
 #elif defined( __LINUX__ ) && defined( __GNUC__ )
 #warning Using the default "{%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"
 #define STR_GUIDSTRING_TEMPLATE	"{%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"
+#elif defined(__APPLE__) && (__clang__)
+#warning Using the default "{%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"
+#define STR_GUIDSTRING_TEMPLATE	"{%08lX-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}"
 #endif
 #endif
 

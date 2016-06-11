@@ -1,7 +1,7 @@
 /*
  * class.c
  * GCOM Release 0.3
- * 
+ *
  * Copyright (c) 1999, 2000 Samuel A. Falvo II
  *
  * This software is provided 'as-is', without any implied or express warranty.
@@ -11,15 +11,15 @@
  * Permission is granted for anyone to use this software for any purpose,
  * including commercial applications, and to alter it and redistribute it
  * freely, subject to the following restrictions:
- * 
+ *
  * 1. The origin of this software must not be misrepresented; you must not
  *    claim that you wrote the original software. If you use this software in a
  *    product, an acknowledgment in the product documentation would be
  *    appreciated but is not required.
- * 
+ *
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
- * 
+ *
  * 3. This notice may not be removed or altered from any source
  *    distribution.
  */
@@ -29,6 +29,9 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
+#if defined(__APPLE__) && defined(__clang__)
+#include <string.h>
+#endif // defined(__APPLE__) && defined(__clang__)
 #include "gcom-config.h"
 
 /************************************************************************/
@@ -41,16 +44,16 @@
  * like patching existing software (including native operating system
  * without having to close the applications, or reboot the operating
  * system.
- * 
+ *
  * Changes take effect immediately upon return from this function, and
  * are system-wide.
- * 
+ *
  * **NOTE**  It's perfectly legal to "redirect" a class to an emulated
  * class.  That is, consider the following registry database setup:
- * 
+ *
  * [InprocServers]
  *      {DEADBEEF-FEED-FACE-0000-0123456789AB} = /com/inproc/servers/foo.so
- * 
+ *
  * [Emulations]
  *      {00010203-0405-0607-0809-0A0B0C0D0E0F} =
  *              {0F0E0D0C-0B0A-0908-0706-050403020100}
@@ -58,18 +61,18 @@
  *              {00112233-4455-6677-8899-AABBCCDDEEFF}
  *      {00112233-4455-6677-8899-AABBCCDDEEFF} =
  *              {DEADBEEF-FEED-FACE-0000-0123456789AB}
- * 
+ *
  * If we try to obtain the class factory for {00010203-0405-0607-0809-
  * 0A0B0C0D0E0F}, we'll actually get the class factory for
  * {DEADBEEF-FEED-FACE-0000-0123456789AB}.
- * 
+ *
  * @param rclsidOld
  * The class which is to be emulated.
- * 
+ *
  * @param rclsidNew
  * The class which is to perform the emulation.  If CLSID_NULL is specified,
  * the emulation mapping for rclsidOld is removed.
- * 
+ *
  * @returns
  * S_OK if successful.  E_WRITEREGDB is returned if the registry database
  * couldn't be updated.  E_NOPERMISSION if the caller doesn't have
@@ -149,20 +152,20 @@ HRESULT CoTreatAsClass( REFCLSID rclsidOld, REFCLSID rclsidNew )
          }
       }
    }
-   
+
    return hr;
 }
 
 /**
  * Retrieves the current emulation status of a particular class.
- * 
+ *
  * @param rclsidOld
  * This is the class ID for which we want to get emulation information
  * on.
- * 
+ *
  * @param pclsidNew
  * This is a pointer to a GUID which will hold the emulated class.
- * 
+ *
  * @returns
  * E_READREGDB is returned if the registration database couldn't be
  * accessed, *or* if no treat-as relationship exists for the class.
@@ -241,7 +244,7 @@ HRESULT CoGetTreatAsClass( REFCLSID rclsidOld, CLSID *pclsidNew )
    {
       memset( pclsidNew, 0, sizeof( CLSID ) );
    }
-   
+
    return hr;
 }
 
@@ -250,10 +253,10 @@ HRESULT CoGetTreatAsClass( REFCLSID rclsidOld, CLSID *pclsidNew )
  * CoTreatAsClass() function.  This function is semantically equivalent
  * to CoGetTreatAsClass(), but it continues to resolve emulations as long
  * as emulations exist.
- * 
+ *
  * @param rclsidOld See CoGetTreatAsClass().
  * @param pclsidNew See CoGetTreatAsClass().
- * 
+ *
  * @returns See CoGetTreatAsClass().
  */
 
@@ -261,20 +264,20 @@ HRESULT gCoResolveTreatAsClass( REFCLSID rclsidOld, CLSID *pclsidNew )
 {
    HRESULT hr;
    CLSID clsid;
-   
+
    memcpy( &clsid, rclsidOld, sizeof( CLSID ) );
    hr = CoGetTreatAsClass( &clsid, &clsid );
    while( SUCCEEDED( hr ) )
    {
       /* These two conditionals exist to prevent deadlock on
        * cases where rclsidOld is emulated to itself, but through
-       * several other classes (e.g., class A -> class B -> 
+       * several other classes (e.g., class A -> class B ->
        * class C -> class A).
        */
 
       if( hr == S_FALSE )
               break;
-      
+
       if( IsEqualIID( rclsidOld, &clsid ) )
       {
          hr = S_FALSE;
