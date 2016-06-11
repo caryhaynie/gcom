@@ -9,3 +9,10 @@ project "libGCOM"
     location "build/gcom"
     files { "include/**.h", "libraries/**.c"}
     includedirs { "include" }
+
+project "genuuid"
+    kind "ConsoleApp"
+    language "C"
+    location "build/utilites/genuuid"
+    files { "libraries/gcom-config.h", "utilities/genuuid.c" }
+    includedirs { "libraries" }

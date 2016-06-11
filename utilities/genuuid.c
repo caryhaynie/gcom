@@ -1,7 +1,7 @@
 /*
  * genuuid.c
  * Dolphin Release 0.5.0
- * 
+ *
  * Copyright (c) 1999 Samuel A. Falvo II
  * All Rights Reserved.
  *
@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/time.h>
+#if defined(__APPLE__) && defined(__clang__)
+#include <string.h>
+#endif // defined(__APPLE__) && defined(__clang__)
+#include "gcom-config.h"
 
 /* This is the offset from the time reference between gettimeofday()
  * (Jan 1 1970 UTC), and that required for UUIDs (Jan 1, 1582 UTC).
@@ -39,7 +43,7 @@ typedef struct
 
 UUID id;
 
-void main( void )
+int main(int argc, char* argv[])
 {
 	int i;
 	struct timeval tv;
@@ -52,7 +56,7 @@ void main( void )
 	hugeTime += time_offset;
 
 	/* Start filling out the UUID */
-	
+
 	id.time_lo  = (unsigned long)( hugeTime & 0x00000000FFFFFFFF );
 	id.time_mid = (unsigned short)( ( hugeTime >> 32 ) & 0x0000FFFF );
 	id.time_hi  = (unsigned short)( ( hugeTime >> 48 ) & 0x0000FFFF );
@@ -60,14 +64,14 @@ void main( void )
 
 	id.clockseq_hi &= 0x1F;
 	id.clockseq_hi |= 0x80;	/* Sets UUID variant */
-	
+
 	memcpy( &id.node[0], node, 6 );
-	
+
 	/* Print out the resulting UUID */
-	
+
 	printf
 	(
-		"{%08X-%04X-%04X-%02X%02X-%02X%02X%02X%02X%02X%02X}\n",
+		STR_GUIDSTRING_TEMPLATE "\n",
 		id.time_lo, id.time_mid, id.time_hi,
 		id.clockseq_hi, id.clockseq_lo,
 		id.node[0], id.node[1], id.node[2],
