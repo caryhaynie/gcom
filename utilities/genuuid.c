@@ -16,7 +16,7 @@
 #if defined(__APPLE__) && defined(__clang__)
 #include <string.h>
 #endif // defined(__APPLE__) && defined(__clang__)
-#include "gcom-config.h"
+#include "gcom/gcom-config.h"
 
 /* This is the offset from the time reference between gettimeofday()
  * (Jan 1 1970 UTC), and that required for UUIDs (Jan 1, 1582 UTC).

@@ -80,13 +80,23 @@ typedef uint8_t			uint8;
 typedef uint16_t		uint16;
 typedef uint32_t		uint32;
 typedef uint64_t		uint64;
-/* Haven't a clue; define your specific platform here. */
 
+/* Visual Studio 2015 */
+#elif _MSC_VER >= 1900 && defined(_WIN32)
+#include <stdint.h>
+typedef int8_t			int8;
+typedef int16_t			int16;
+typedef int32_t			int32;
+typedef int64_t			int64;
 
+typedef uint8_t			uint8;
+typedef uint16_t		uint16;
+typedef uint32_t		uint32;
+typedef uint64_t		uint64;
 #else
+/* Haven't a clue; define your specific platform here. */
 #error Define a set of datatypes for your particular platform here.
 #endif
-
 /************************************************************************/
 /* Unicode Type Support							*/
 /************************************************************************/
@@ -109,8 +119,8 @@ typedef uint32			wchar;
 #ifdef NULL
 #undef NULL
 #endif
-#endif
 #define NULL			(0L)
+#endif
 
 #ifndef FALSE
 #define FALSE			(0L)
@@ -119,6 +129,7 @@ typedef uint32			wchar;
 #ifndef TRUE
 #define TRUE			(!FALSE)
 #endif
+
 
 /************************************************************************/
 /* Nice construct for defining flags variables and such.  For any given */
