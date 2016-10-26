@@ -31,6 +31,39 @@ freely, subject to the following restrictions:
  * GCOM Release 0.1
  */
 
+ // Generic helper definitions for shared library support
+#if defined _WIN32 || defined __CYGWIN__
+#define GCOM_HELPER_DLL_IMPORT __declspec(dllimport)
+#define GCOM_HELPER_DLL_EXPORT __declspec(dllexport)
+#define GCOM_HELPER_DLL_LOCAL
+#else
+#if __GNUC__ >= 4
+#define GCOM_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+#define GCOM_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+#define GCOM_HELPER_DLL_LOCAL  __attribute__ ((visibility ("hidden")))
+#else
+#define GCOM_HELPER_DLL_IMPORT
+#define GCOM_HELPER_DLL_EXPORT
+#define GCOM_HELPER_DLL_LOCAL
+#endif
+#endif
+
+ // Now we use the generic helper definitions above to define GCOM_API and GCOM_LOCAL.
+ // GCOM_API is used for the public API symbols. It either DLL imports or DLL exports (or does nothing for static build)
+ // GCOM_LOCAL is used for non-api symbols.
+
+#ifdef GCOM_DLL // defined if GCOM is compiled as a DLL
+#ifdef GCOM_DLL_EXPORTS // defined if we are building the GCOM DLL (instead of using it)
+#define GCOM_API GCOM_HELPER_DLL_EXPORT
+#else
+#define GCOM_API GCOM_HELPER_DLL_IMPORT
+#endif // GCOM_DLL_EXPORTS
+#define GCOM_LOCAL GCOM_HELPER_DLL_LOCAL
+#else // GCOM_DLL is not defined: this means GCOM is a static lib.
+#define GCOM_API
+#define GCOM_LOCAL
+#endif // GCOM_DLL
+
 #include <gcom/types.h>
 #include <gcom/unicode.h>
 #include <gcom/guid.h>
@@ -57,6 +90,8 @@ typedef uint32		GCOMVERSION;
 #define GCOM_CURRENT_REVISION	(3)
 
 GCOMVERSION	CoBuildVersion( void );
+
+
 
 /************************************************************************/
 /* Miscellanious GCOM functions						*/
