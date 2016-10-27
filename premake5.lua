@@ -1,3 +1,10 @@
+-- file lists
+local configHeader = "gcom-config.h"
+local pubIncludeDir =  "gcom/include"
+local publicHeaders = pubIncludeDir .. "/gcom/**.h"
+local privateHeaders = "gcom/src/**.h"
+local gcomSource = "gcom/src/**.c"
+
 -- GCOM
 workspace "GCOM"
     configurations { "Debug", "Release" }
@@ -7,12 +14,12 @@ project "libGCOM"
     kind "SharedLib"
     language "C"
     location "build/gcom"
-    files { "gcom/include/gcom/**.h", "gcom/src/**.c"}
-    includedirs { "gcom/include" }
+    files { configHeader, publicHeaders, privateHeaders, gcomSource}
+    includedirs { pubIncludeDir }
+    defines { "GCOM_DLL_EXPORTS" }
 
 project "genuuid"
     kind "ConsoleApp"
     language "C"
     location "build/utilites/genuuid"
-    files { "gcom/include/gcom/gcom-config.h", "utilities/genuuid.c" }
-    includedirs { "gcom/include" }
+    files { configHeader, "utilities/genuuid.c" }    
