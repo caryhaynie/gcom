@@ -32,7 +32,9 @@ freely, subject to the following restrictions:
  */
 
 #include <gcom/types.h>
+#if defined(__APPLE__) || defined(__LINUX__)
 #include <dlfcn.h>
+#endif
 
 /************************************************************************/
 /* Dynamic Link Library Definitions					*/

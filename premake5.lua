@@ -15,11 +15,12 @@ project "libGCOM"
     language "C"
     location "build/gcom"
     files { configHeader, publicHeaders, privateHeaders, gcomSource}
-    includedirs { pubIncludeDir }
+    includedirs { _MAIN_SCRIPT_DIR, pubIncludeDir }
     defines { "GCOM_DLL_EXPORTS" }
 
 project "genuuid"
     kind "ConsoleApp"
     language "C"
     location "build/utilites/genuuid"
-    files { configHeader, "utilities/genuuid.c" }    
+    files { configHeader, "utilities/genuuid.c" }
+    includedirs { _MAIN_SCRIPT_DIR }    

@@ -11,10 +11,10 @@
  */
 
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/time.h>
 #if defined(__APPLE__) && defined(__clang__)
 #include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
 #endif // defined(__APPLE__) && defined(__clang__)
 #include "gcom-config.h"
 
