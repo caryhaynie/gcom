@@ -22,5 +22,9 @@ project "genuuid"
     kind "ConsoleApp"
     language "C"
     location "build/utilites/genuuid"
-    files { configHeader, "utilities/genuuid.c" }
-    includedirs { _MAIN_SCRIPT_DIR }    
+    files { configHeader, "utilities/genuuid/src/genuuid.c", "utilities/genuuid/src/genuuid.h" }
+    includedirs { _MAIN_SCRIPT_DIR }
+    filter { "system:Windows"}
+        files { "utilities/genuuid/src/platform_win32.c" }
+    filter { "system:bsd or linux or macosx" }
+        files { "utilities/genuuid/src/platform_posix.c" }
