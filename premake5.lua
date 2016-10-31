@@ -1,3 +1,5 @@
+local uv = require("tools/uv")
+
 -- file lists
 local configHeader = "gcom-config.h"
 local pubIncludeDir =  "gcom/include"
