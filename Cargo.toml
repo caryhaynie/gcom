@@ -4,4 +4,5 @@ version = "0.1.0"
 authors = ["Cary Haynie <cary.haynie@gmail.com>"]
 
 [dependencies]
+gcom-core = { path = "gcom" }
 uuid = { version = "0.4.0", features = ["v4"] }
